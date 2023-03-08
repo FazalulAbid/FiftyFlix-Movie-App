@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FiftyFlix Movies</string>
+
+    <!--  Home Screen-->
+    <string name="play">Play</string>
+    <string name="title_activity_main2">MainActivity2</string>
 </resources>
