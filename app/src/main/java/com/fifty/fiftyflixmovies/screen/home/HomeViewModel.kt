@@ -1,6 +1,5 @@
 package com.fifty.fiftyflixmovies.screen.home
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.fifty.fiftyflixmovies.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,8 +41,12 @@ class HomeViewModel @Inject constructor(
     private var _trendingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
     val trendingMovies: State<Flow<PagingData<Movie>>> = _trendingMovies
 
+    private var _popularMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
+    val popularMovies: State<Flow<PagingData<Movie>>> = _popularMovies
+
     init {
         getTrendingMovies(null)
+        getPopularMovies(null)
     }
 
     // Banner Movie.
@@ -52,7 +54,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val movie = moviesRepository.getBannerMovie()
             _bannerMovie.value = movie
-            Timber.tag("Hello").d("fetchBannerMovie: $movie")
         }
     }
 
@@ -67,6 +68,20 @@ class HomeViewModel @Inject constructor(
                 }.cachedIn(viewModelScope)
             } else {
                 moviesRepository.getTrendingMoviesThisWeek().cachedIn(viewModelScope)
+            }
+        }
+    }
+
+    private fun getPopularMovies(genreId: Int?) {
+        viewModelScope.launch {
+            _popularMovies.value = if (genreId != null) {
+                moviesRepository.getPopularMovies().map { pagingData ->
+                    pagingData.filter {
+                        it.genreIds.contains(genreId)
+                    }
+                }.cachedIn(viewModelScope)
+            } else {
+                moviesRepository.getPopularMovies().cachedIn(viewModelScope)
             }
         }
     }

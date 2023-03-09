@@ -1,6 +1,5 @@
 package com.fifty.fiftyflixmovies.screen.home
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
-import com.fifty.fiftyflixmovies.App
 import com.fifty.fiftyflixmovies.model.Movie
 import com.fifty.fiftyflixmovies.screen.common.MovieItem
 import com.fifty.fiftyflixmovies.ui.theme.primaryPink
@@ -23,7 +21,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 @Composable
-fun TrendingToday(trendingMovies: LazyPagingItems<Movie>) {
+fun HorizontalMoviesList(moviesList: LazyPagingItems<Movie>) {
     Box(content = {
         Spacer(modifier = Modifier.height(5.dp))
         Box(
@@ -34,7 +32,7 @@ fun TrendingToday(trendingMovies: LazyPagingItems<Movie>) {
         ) {
             LazyRow(content = {
 
-                items(trendingMovies) { film ->
+                items(moviesList) { film ->
                     MovieItem(
                         modifier = Modifier
                             .height(200.dp)
@@ -46,7 +44,7 @@ fun TrendingToday(trendingMovies: LazyPagingItems<Movie>) {
                     )
                 }
 
-                if (trendingMovies.loadState.append == LoadState.Loading) {
+                if (moviesList.loadState.append == LoadState.Loading) {
                     item {
                         CircularProgressIndicator(
                             modifier = Modifier
@@ -58,8 +56,7 @@ fun TrendingToday(trendingMovies: LazyPagingItems<Movie>) {
             }
             )
 
-            trendingMovies.apply {
-                loadState
+            moviesList.apply {
                 when (loadState.refresh) {
                     is LoadState.Loading -> {
                         CircularProgressIndicator(
@@ -69,7 +66,7 @@ fun TrendingToday(trendingMovies: LazyPagingItems<Movie>) {
                         )
                     }
                     is LoadState.Error -> {
-                        val e = trendingMovies.loadState.refresh as LoadState.Error
+                        val e = moviesList.loadState.refresh as LoadState.Error
                         Text(
                             text = when (e.error) {
                                 is HttpException -> {

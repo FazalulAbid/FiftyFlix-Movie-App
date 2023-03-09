@@ -1,6 +1,5 @@
 package com.fifty.fiftyflixmovies.screen.home
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
@@ -14,7 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.fifty.fiftyflixmovies.model.Movie
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -24,11 +25,12 @@ fun HomeScreen(
     navigator: DestinationsNavigator,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-
-    val dashboardContentScrollState = rememberScrollState()
-    val trendingMovies = viewModel.trendingMovies.value.collectAsLazyPagingItems()
     viewModel.fetchBannerMovie()
     val bannerMovie = viewModel.bannerMovie.collectAsState().value
+    val dashboardContentScrollState = rememberScrollState()
+
+    val trendingMovies = viewModel.trendingMovies.value.collectAsLazyPagingItems()
+    val popularMovies = viewModel.popularMovies.value.collectAsLazyPagingItems()
 
     Box(
         modifier = Modifier
@@ -40,27 +42,36 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier
                     .padding(16.dp)
-                    .height(300.dp)
+                    .height(600.dp)
             ) {
-                item(content = {
-                    Text(
-                        text = "Trending today",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    //Spacer(modifier = Modifier.height(8.dp))
-                })
 
                 // Trending movies today.
                 item {
-                    TrendingToday(trendingMovies = trendingMovies)
+                    LazyColumnMovieItem(listHead = "Trending Movies", moviesList = trendingMovies)
                 }
+
+                // Popular Movies.
+                item {
+                    LazyColumnMovieItem(listHead = "Popular Movies", moviesList = popularMovies)
+                }
+
             }
         }
 
         // Custom home top-bar.
         HomeTopBar(dashboardContentScrollState)
     }
+}
+
+@Composable
+fun LazyColumnMovieItem(listHead: String, moviesList: LazyPagingItems<Movie>) {
+    Text(
+        text = listHead,
+        color = Color.White,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold
+    )
+
+    HorizontalMoviesList(moviesList)
+    Spacer(modifier = Modifier.height(8.dp))
 }

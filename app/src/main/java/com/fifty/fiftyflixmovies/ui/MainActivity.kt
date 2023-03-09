@@ -1,12 +1,15 @@
 package com.fifty.fiftyflixmovies.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,11 +30,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FiftyFlixMoviesTheme {
+
                 // A surface container using the 'background' color from the theme
-                androidx.compose.material.Surface(
+                Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = androidx.compose.material.MaterialTheme.colors.background
+                    color = MaterialTheme.colors.background
                 ) {
+
                     val navController = rememberAnimatedNavController()
                     val navHostEngine = rememberNavHostEngine()
 
