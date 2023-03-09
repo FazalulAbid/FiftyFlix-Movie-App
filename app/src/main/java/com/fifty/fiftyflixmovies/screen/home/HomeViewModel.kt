@@ -44,9 +44,13 @@ class HomeViewModel @Inject constructor(
     private var _popularMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
     val popularMovies: State<Flow<PagingData<Movie>>> = _popularMovies
 
+    private var _upcomingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
+    val upcomingMovies: State<Flow<PagingData<Movie>>> = _upcomingMovies
+
     init {
         getTrendingMovies(null)
         getPopularMovies(null)
+        getUpcomingMovies(null)
     }
 
     // Banner Movie.
@@ -82,6 +86,20 @@ class HomeViewModel @Inject constructor(
                 }.cachedIn(viewModelScope)
             } else {
                 moviesRepository.getPopularMovies().cachedIn(viewModelScope)
+            }
+        }
+    }
+
+    private fun getUpcomingMovies(genreId: Int?) {
+        viewModelScope.launch {
+            _upcomingMovies.value = if (genreId != null) {
+                moviesRepository.getUpcomingMovie().map { pagingData ->
+                    pagingData.filter {
+                        it.genreIds.contains(genreId)
+                    }
+                }.cachedIn(viewModelScope)
+            } else {
+                moviesRepository.getUpcomingMovie().cachedIn(viewModelScope)
             }
         }
     }

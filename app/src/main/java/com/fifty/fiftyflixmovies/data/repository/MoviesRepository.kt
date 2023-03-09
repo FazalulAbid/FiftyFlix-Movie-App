@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.fifty.fiftyflixmovies.data.paging.PopularMovieSource
 import com.fifty.fiftyflixmovies.data.paging.TrendingMoviesSource
+import com.fifty.fiftyflixmovies.data.paging.UpcomingMoviesSource
 import com.fifty.fiftyflixmovies.data.remote.TMDBApi
 import com.fifty.fiftyflixmovies.model.Movie
 import kotlinx.coroutines.flow.Flow
@@ -36,5 +37,13 @@ class MoviesRepository @Inject constructor(private val api: TMDBApi) {
         ).flow
     }
 
+    fun getUpcomingMovie(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(enablePlaceholders = false, pageSize = 20),
+            pagingSourceFactory = {
+                UpcomingMoviesSource(api)
+            }
+        ).flow
+    }
 
 }

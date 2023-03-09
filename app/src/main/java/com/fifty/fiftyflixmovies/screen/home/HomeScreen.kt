@@ -1,7 +1,6 @@
 package com.fifty.fiftyflixmovies.screen.home
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -31,6 +30,7 @@ fun HomeScreen(
 
     val trendingMovies = viewModel.trendingMovies.value.collectAsLazyPagingItems()
     val popularMovies = viewModel.popularMovies.value.collectAsLazyPagingItems()
+    val upcomingMovies = viewModel.upcomingMovies.value.collectAsLazyPagingItems()
 
     Box(
         modifier = Modifier
@@ -39,21 +39,19 @@ fun HomeScreen(
         Column(Modifier.verticalScroll(dashboardContentScrollState)) {
             // Banner Image.
             BannerImage(bannerMovie)
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .height(600.dp)
             ) {
 
                 // Trending movies today.
-                item {
-                    LazyColumnMovieItem(listHead = "Trending Movies", moviesList = trendingMovies)
-                }
+                LazyColumnMovieItem(listHead = "Trending Movies", moviesList = trendingMovies)
 
                 // Popular Movies.
-                item {
-                    LazyColumnMovieItem(listHead = "Popular Movies", moviesList = popularMovies)
-                }
+                LazyColumnMovieItem(listHead = "Popular Movies", moviesList = popularMovies)
+
+                // Upcoming Movies.
+                LazyColumnMovieItem(listHead = "Upcoming Movies", moviesList = upcomingMovies)
 
             }
         }
