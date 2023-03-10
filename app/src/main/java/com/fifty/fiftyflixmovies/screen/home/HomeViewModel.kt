@@ -47,18 +47,10 @@ class HomeViewModel @Inject constructor(
     private var _upcomingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
     val upcomingMovies: State<Flow<PagingData<Movie>>> = _upcomingMovies
 
-    private var _nowPlayingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-    val nowPlayingMovies: State<Flow<PagingData<Movie>>> = _nowPlayingMovies
-
-    private var _topRatedMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-    val topRatedMovies: State<Flow<PagingData<Movie>>> = _topRatedMovies
-
     init {
         getTrendingMovies(null)
         getPopularMovies(null)
         getUpcomingMovies(null)
-        nowPlayingMovies(null)
-        topRatedMovies(null)
     }
 
     // Banner Movie.
@@ -108,34 +100,6 @@ class HomeViewModel @Inject constructor(
                 }.cachedIn(viewModelScope)
             } else {
                 moviesRepository.getUpcomingMovie().cachedIn(viewModelScope)
-            }
-        }
-    }
-
-    private fun nowPlayingMovies(genreId: Int?) {
-        viewModelScope.launch {
-            _nowPlayingMovies.value = if (genreId != null) {
-                moviesRepository.nowPlayingMovies().map { pagingData ->
-                    pagingData.filter {
-                        it.genreIds.contains(genreId)
-                    }
-                }.cachedIn(viewModelScope)
-            } else {
-                moviesRepository.nowPlayingMovies().cachedIn(viewModelScope)
-            }
-        }
-    }
-
-    private fun topRatedMovies(genreId: Int?) {
-        viewModelScope.launch {
-            _topRatedMovies.value = if (genreId != null) {
-                moviesRepository.topRatedMovies().map { pagingData ->
-                    pagingData.filter {
-                        it.genreIds.contains(genreId)
-                    }
-                }.cachedIn(viewModelScope)
-            } else {
-                moviesRepository.topRatedMovies().cachedIn(viewModelScope)
             }
         }
     }

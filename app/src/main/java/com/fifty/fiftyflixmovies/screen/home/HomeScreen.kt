@@ -31,8 +31,6 @@ fun HomeScreen(
     val trendingMovies = viewModel.trendingMovies.value.collectAsLazyPagingItems()
     val popularMovies = viewModel.popularMovies.value.collectAsLazyPagingItems()
     val upcomingMovies = viewModel.upcomingMovies.value.collectAsLazyPagingItems()
-    val nowPlayingMovies = viewModel.nowPlayingMovies.value.collectAsLazyPagingItems()
-    val topRatedMovies = viewModel.topRatedMovies.value.collectAsLazyPagingItems()
 
     Box(
         modifier = Modifier
@@ -47,19 +45,13 @@ fun HomeScreen(
             ) {
 
                 // Trending movies today.
-                ColumnMovieItem(listHead = "Trending Movies", moviesList = trendingMovies)
+                LazyColumnMovieItem(listHead = "Trending Movies", moviesList = trendingMovies)
 
                 // Popular Movies.
-                ColumnMovieItem(listHead = "Popular Movies", moviesList = popularMovies)
+                LazyColumnMovieItem(listHead = "Popular Movies", moviesList = popularMovies)
 
                 // Upcoming Movies.
-                ColumnMovieItem(listHead = "Upcoming Movies", moviesList = upcomingMovies)
-
-                // Upcoming Movies.
-                ColumnMovieItem(listHead = "Now Playing Movies", moviesList = nowPlayingMovies)
-
-                // Upcoming Movies.
-                ColumnMovieItem(listHead = "Top Rated Movies", moviesList = topRatedMovies)
+                LazyColumnMovieItem(listHead = "Upcoming Movies", moviesList = upcomingMovies)
 
             }
         }
@@ -70,7 +62,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun ColumnMovieItem(listHead: String, moviesList: LazyPagingItems<Movie>) {
+fun LazyColumnMovieItem(listHead: String, moviesList: LazyPagingItems<Movie>) {
     Text(
         text = listHead,
         color = Color.White,
