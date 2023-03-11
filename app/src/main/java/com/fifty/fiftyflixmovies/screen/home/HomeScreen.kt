@@ -31,6 +31,8 @@ fun HomeScreen(
     val trendingMovies = viewModel.trendingMovies.value.collectAsLazyPagingItems()
     val popularMovies = viewModel.popularMovies.value.collectAsLazyPagingItems()
     val upcomingMovies = viewModel.upcomingMovies.value.collectAsLazyPagingItems()
+    val nowPlayingMovies = viewModel.nowPlayingMovies.value.collectAsLazyPagingItems()
+    val topRatedMovies = viewModel.topRatedMovies.value.collectAsLazyPagingItems()
 
     Box(
         modifier = Modifier
@@ -52,6 +54,12 @@ fun HomeScreen(
 
                 // Upcoming Movies.
                 LazyColumnMovieItem(listHead = "Upcoming Movies", moviesList = upcomingMovies)
+
+                // Now Playing Movies.
+                LazyColumnMovieItem(listHead = "Now Playing Movies", moviesList = nowPlayingMovies)
+
+                // Upcoming Movies.
+                LazyColumnMovieItem(listHead = "Top Rated Movies", moviesList = topRatedMovies)
 
             }
         }
