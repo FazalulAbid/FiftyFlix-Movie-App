@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
-import com.fifty.fiftyflixmovies.model.Movie
+import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.screen.common.MovieItem
 import com.fifty.fiftyflixmovies.ui.theme.primaryPink
 import com.fifty.fiftyflixmovies.util.Constants

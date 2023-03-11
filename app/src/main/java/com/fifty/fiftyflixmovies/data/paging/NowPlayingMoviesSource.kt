@@ -2,12 +2,12 @@ package com.fifty.fiftyflixmovies.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.fifty.fiftyflixmovies.data.remote.TMDBApi
-import com.fifty.fiftyflixmovies.model.Movie
+import com.fifty.fiftyflixmovies.data.api.TMDBService
+import com.fifty.fiftyflixmovies.data.model.Movie
 import retrofit2.HttpException
 import java.io.IOException
 
-class NowPlayingMoviesSource(private val api: TMDBApi) :
+class NowPlayingMoviesSource(private val api: TMDBService) :
     PagingSource<Int, Movie>() {
 
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {

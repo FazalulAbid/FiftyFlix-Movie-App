@@ -1,6 +1,9 @@
 package com.fifty.fiftyflixmovies.di
 
-import com.fifty.fiftyflixmovies.data.remote.TMDBApi
+import com.fifty.fiftyflixmovies.data.api.TMDBService
+import com.fifty.fiftyflixmovies.data.db.GenreDao
+import com.fifty.fiftyflixmovies.data.db.MovieDao
+import com.fifty.fiftyflixmovies.data.db.TMDBDatabase
 import com.fifty.fiftyflixmovies.data.repository.MoviesRepository
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
 import dagger.Module
@@ -39,16 +42,26 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesTMDBApi(okHttpClient: OkHttpClient): TMDBApi {
+    fun providesTMDBApi(okHttpClient: OkHttpClient): TMDBService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
-            .create(TMDBApi::class.java)
+            .create(TMDBService::class.java)
+    }
+
+    @Provides
+    fun providesMovieDao(database: TMDBDatabase): MovieDao {
+        return database.movieDao()
+    }
+
+    @Provides
+    fun providesGenreDao(database: TMDBDatabase): GenreDao {
+        return database.genreDao()
     }
 
     @Singleton
     @Provides
-    fun providesMoviesRepository(api: TMDBApi) = MoviesRepository(api)
+    fun providesMoviesRepository(api: TMDBService) = MoviesRepository(api)
 }

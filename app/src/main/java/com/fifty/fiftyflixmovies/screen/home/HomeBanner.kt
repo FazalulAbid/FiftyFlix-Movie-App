@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.fifty.fiftyflixmovies.R
-import com.fifty.fiftyflixmovies.model.Movie
+import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.util.Constants
 
 @Composable

@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.fifty.fiftyflixmovies.model.BottomNavItem
+import com.fifty.fiftyflixmovies.data.model.BottomNavItem
 import com.fifty.fiftyflixmovies.ui.theme.primaryDark
 import com.fifty.fiftyflixmovies.ui.theme.primaryGray
 import com.fifty.fiftyflixmovies.ui.theme.primaryPink

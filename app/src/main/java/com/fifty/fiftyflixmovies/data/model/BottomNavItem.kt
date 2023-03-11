@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.model
+package com.fifty.fiftyflixmovies.data.model
 
 import com.fifty.fiftyflixmovies.R
 import com.fifty.fiftyflixmovies.screen.destinations.Destination

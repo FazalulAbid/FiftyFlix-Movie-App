@@ -1,9 +1,8 @@
-package com.fifty.fiftyflixmovies.data.remote.response
+package com.fifty.fiftyflixmovies.data.model
 
-import com.fifty.fiftyflixmovies.model.Movie
 import com.google.gson.annotations.SerializedName
 
-data class MoviesResponse(
+data class MovieResponse(
     @SerializedName("page")
     val page: Int,
     @SerializedName("results")

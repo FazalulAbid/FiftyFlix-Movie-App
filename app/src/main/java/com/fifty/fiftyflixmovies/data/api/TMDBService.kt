@@ -1,47 +1,60 @@
-package com.fifty.fiftyflixmovies.data.remote
+package com.fifty.fiftyflixmovies.data.api
 
 import com.fifty.fiftyflixmovies.BuildConfig.API_KEY
-import com.fifty.fiftyflixmovies.data.remote.response.MoviesResponse
+import com.fifty.fiftyflixmovies.data.model.GenreList
+import com.fifty.fiftyflixmovies.data.model.MovieResponse
 import com.fifty.fiftyflixmovies.util.Constants.API_LANGUAGE
 import com.fifty.fiftyflixmovies.util.Constants.STARTING_PAGE_INDEX
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface TMDBApi {
+interface TMDBService {
 
     @GET("trending/movie/day")
     suspend fun getTrendingTodayMovies(
         @Query("page") page: Int = STARTING_PAGE_INDEX,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("language") language: String = API_LANGUAGE
-    ): MoviesResponse
+    ): MovieResponse
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("page") page: Int = STARTING_PAGE_INDEX,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("language") language: String = "en"
-    ): MoviesResponse
+    ): MovieResponse
 
     @GET("movie/upcoming")
     suspend fun getUpcomingMovies(
         @Query("page") page: Int = STARTING_PAGE_INDEX,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("language") language: String = "en"
-    ): MoviesResponse
+    ): MovieResponse
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
         @Query("page") page: Int = STARTING_PAGE_INDEX,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("language") language: String = "en"
-    ): MoviesResponse
+    ): MovieResponse
 
     @GET("movie/now_playing")
     suspend fun getNowPlayingMovies(
         @Query("page") page: Int = STARTING_PAGE_INDEX,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("language") language: String = "en"
-    ): MoviesResponse
+    ): MovieResponse
+
+    @GET("genre/movie/list")
+    suspend fun getMovieGenres(
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("language") language: String = "en"
+    ): GenreList
+
+    @GET("genre/tv/list")
+    suspend fun getTvSeriesGenres(
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("language") language: String = "en"
+    ): GenreList
 
 }

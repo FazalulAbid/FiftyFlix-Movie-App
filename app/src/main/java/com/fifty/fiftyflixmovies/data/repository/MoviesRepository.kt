@@ -4,12 +4,12 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.fifty.fiftyflixmovies.data.paging.*
-import com.fifty.fiftyflixmovies.data.remote.TMDBApi
-import com.fifty.fiftyflixmovies.model.Movie
+import com.fifty.fiftyflixmovies.data.api.TMDBService
+import com.fifty.fiftyflixmovies.data.model.Movie
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class MoviesRepository @Inject constructor(private val api: TMDBApi) {
+class MoviesRepository @Inject constructor(private val api: TMDBService) {
 
     suspend fun getBannerMovie(): Movie {
         val response = api.getTrendingTodayMovies(1)
