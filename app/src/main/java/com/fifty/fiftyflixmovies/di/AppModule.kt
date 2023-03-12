@@ -1,7 +1,10 @@
 package com.fifty.fiftyflixmovies.di
 
+import android.content.Context
+import androidx.room.Room
 import com.fifty.fiftyflixmovies.data.api.TMDBService
 import com.fifty.fiftyflixmovies.data.db.GenreDao
+import com.fifty.fiftyflixmovies.data.db.MovieCategoryDao
 import com.fifty.fiftyflixmovies.data.db.MovieDao
 import com.fifty.fiftyflixmovies.data.db.TMDBDatabase
 import com.fifty.fiftyflixmovies.data.repository.MoviesRepository
@@ -9,6 +12,7 @@ import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -51,6 +55,16 @@ object AppModule {
             .create(TMDBService::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun providesTMDBDatabase(@ApplicationContext applicationContext: Context): TMDBDatabase {
+        return Room.databaseBuilder(
+            applicationContext,
+            TMDBDatabase::class.java,
+            "tmdb_db"
+        ).build()
+    }
+
     @Provides
     fun providesMovieDao(database: TMDBDatabase): MovieDao {
         return database.movieDao()
@@ -61,7 +75,13 @@ object AppModule {
         return database.genreDao()
     }
 
+    @Provides
+    fun providesMovieCategoryDao(database: TMDBDatabase): MovieCategoryDao {
+        return database.movieCategoryDao()
+    }
+
     @Singleton
     @Provides
-    fun providesMoviesRepository(api: TMDBService) = MoviesRepository(api)
+    fun providesMoviesRepository(api: TMDBService, movieDao: MovieDao) =
+        MoviesRepository(api, movieDao)
 }

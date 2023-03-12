@@ -24,6 +24,30 @@ fun HomeScreen(
     navigator: DestinationsNavigator,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+    val movies = listOf(
+        Movie(
+            1,
+            "Avengers",
+            "Its an Overview",
+            1.00,
+            "Its poster path",
+            "Its Release Date",
+            "Its Title"
+        ),
+        Movie(
+            2,
+            "Avengers Endgame",
+            "Its an Overview",
+            1.00,
+            "Its poster path",
+            "Its Release Date",
+            "Its Title"
+        )
+    )
+
+    viewModel.saveToMoviesDatabase(movies)
+
     viewModel.fetchBannerMovie()
     val bannerMovie = viewModel.bannerMovie.collectAsState().value
     val dashboardContentScrollState = rememberScrollState()

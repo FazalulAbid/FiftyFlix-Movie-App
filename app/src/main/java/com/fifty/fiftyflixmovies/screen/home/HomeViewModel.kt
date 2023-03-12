@@ -152,4 +152,10 @@ class HomeViewModel @Inject constructor(
     }
 
 
+    fun saveToMoviesDatabase(movies: List<Movie>) {
+        viewModelScope.launch {
+            moviesRepository.saveMoviesToDatabase(movies)
+        }
+    }
+
 }

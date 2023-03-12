@@ -3,13 +3,17 @@ package com.fifty.fiftyflixmovies.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.fifty.fiftyflixmovies.data.paging.*
 import com.fifty.fiftyflixmovies.data.api.TMDBService
+import com.fifty.fiftyflixmovies.data.db.MovieDao
 import com.fifty.fiftyflixmovies.data.model.Movie
+import com.fifty.fiftyflixmovies.data.paging.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class MoviesRepository @Inject constructor(private val api: TMDBService) {
+class MoviesRepository @Inject constructor(
+    private val api: TMDBService,
+    private val movieDao: MovieDao
+) {
 
     suspend fun getBannerMovie(): Movie {
         val response = api.getTrendingTodayMovies(1)
@@ -62,4 +66,7 @@ class MoviesRepository @Inject constructor(private val api: TMDBService) {
         ).flow
     }
 
+    suspend fun saveMoviesToDatabase(movies: List<Movie>) {
+        movieDao.saveMovies(movies)
+    }
 }

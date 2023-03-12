@@ -12,7 +12,6 @@ object Constants {
     // Database table names.
     const val MOVIES_TABLE = "movies"
     const val GENRES_TABLE = "genres"
-    const val MOVIE_GENRES_TABLE = "movie_genres"
     const val MOVIE_CATEGORIES_TABLE = "movie_categories"
 
     // Movies categories.
