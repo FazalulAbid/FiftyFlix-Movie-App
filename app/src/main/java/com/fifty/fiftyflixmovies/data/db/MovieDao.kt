@@ -13,7 +13,7 @@ interface MovieDao {
     suspend fun deleteAllMovies()
 
     @Query("SELECT * FROM movies")
-    suspend fun getMovies(): List<Movie>
+    suspend fun getMoviesOfCategory(): List<Movie>
 
     @Transaction
     @Query("SELECT * FROM genres WHERE genreId = :genreId")

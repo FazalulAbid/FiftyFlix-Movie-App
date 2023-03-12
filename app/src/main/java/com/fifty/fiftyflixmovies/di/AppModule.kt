@@ -2,12 +2,21 @@ package com.fifty.fiftyflixmovies.di
 
 import android.content.Context
 import androidx.room.Room
+import com.fifty.fiftyflixmovies.BuildConfig.API_KEY
 import com.fifty.fiftyflixmovies.data.api.TMDBService
 import com.fifty.fiftyflixmovies.data.db.GenreDao
 import com.fifty.fiftyflixmovies.data.db.MovieCategoryDao
 import com.fifty.fiftyflixmovies.data.db.MovieDao
 import com.fifty.fiftyflixmovies.data.db.TMDBDatabase
-import com.fifty.fiftyflixmovies.data.repository.MoviesRepository
+import com.fifty.fiftyflixmovies.data.repository.movie.MoviesRepositoryImpl
+import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieCacheDataSource
+import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieLocalDataSource
+import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieRemoteDataSource
+import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieCacheDataSourceImpl
+import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieLocalDataSourceImpl
+import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemoteDataSourceImpl
+import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
+import com.fifty.fiftyflixmovies.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -27,9 +36,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-    }
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+
 
     @Singleton
     @Provides
@@ -65,23 +74,49 @@ object AppModule {
         ).build()
     }
 
+    @Singleton
     @Provides
-    fun providesMovieDao(database: TMDBDatabase): MovieDao {
-        return database.movieDao()
-    }
-
-    @Provides
-    fun providesGenreDao(database: TMDBDatabase): GenreDao {
-        return database.genreDao()
-    }
-
-    @Provides
-    fun providesMovieCategoryDao(database: TMDBDatabase): MovieCategoryDao {
-        return database.movieCategoryDao()
-    }
+    fun providesMovieDao(database: TMDBDatabase): MovieDao =
+        database.movieDao()
 
     @Singleton
     @Provides
-    fun providesMoviesRepository(api: TMDBService, movieDao: MovieDao) =
-        MoviesRepository(api, movieDao)
+    fun providesGenreDao(database: TMDBDatabase): GenreDao =
+        database.genreDao()
+
+    @Singleton
+    @Provides
+    fun providesMovieCategoryDao(database: TMDBDatabase): MovieCategoryDao =
+        database.movieCategoryDao()
+
+    @Singleton
+    @Provides
+    fun providesMovieRemoteDataSource(tmdbService: TMDBService): MovieRemoteDataSource =
+        MovieRemoteDataSourceImpl(tmdbService, API_KEY)
+
+    @Singleton
+    @Provides
+    fun providesMovieLocalDataSource(movieDao: MovieDao): MovieLocalDataSource =
+        MovieLocalDataSourceImpl(movieDao)
+
+    @Singleton
+    @Provides
+    fun providesMovieCacheDataSource(): MovieCacheDataSource =
+        MovieCacheDataSourceImpl()
+
+    @Singleton
+    @Provides
+    fun providesMoviesRepository(
+        movieRemoteDataSource: MovieRemoteDataSource,
+        movieLocalDataSource: MovieLocalDataSource,
+        movieCacheDataSource: MovieCacheDataSource
+    ): MovieRepository = MoviesRepositoryImpl(
+        movieRemoteDataSource,
+        movieLocalDataSource,
+        movieCacheDataSource
+    )
+
+    @Provides
+    fun providesHomeViewModel(movieRepository: MovieRepository): HomeViewModel =
+        HomeViewModel(movieRepository)
 }
