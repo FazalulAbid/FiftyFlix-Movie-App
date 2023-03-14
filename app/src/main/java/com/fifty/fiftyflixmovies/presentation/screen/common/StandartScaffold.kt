@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.common
+package com.fifty.fiftyflixmovies.presentation.screen.common
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.*
@@ -11,9 +11,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fifty.fiftyflixmovies.data.model.BottomNavItem
-import com.fifty.fiftyflixmovies.ui.theme.primaryDark
-import com.fifty.fiftyflixmovies.ui.theme.primaryGray
-import com.fifty.fiftyflixmovies.ui.theme.primaryPink
+import com.fifty.fiftyflixmovies.presentation.home.ui.theme.primaryDark
+import com.fifty.fiftyflixmovies.presentation.home.ui.theme.primaryGray
+import com.fifty.fiftyflixmovies.presentation.home.ui.theme.primaryPink
 
 @Composable
 fun StandardScaffold(

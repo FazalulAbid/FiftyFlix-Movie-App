@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.common
+package com.fifty.fiftyflixmovies.presentation.screen.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize

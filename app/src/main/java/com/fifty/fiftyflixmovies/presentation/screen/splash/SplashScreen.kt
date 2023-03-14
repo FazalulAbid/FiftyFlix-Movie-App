@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.splash
+package com.fifty.fiftyflixmovies.presentation.screen.splash
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fifty.fiftyflixmovies.R
-import com.fifty.fiftyflixmovies.screen.destinations.HomeScreenDestination
+import com.fifty.fiftyflixmovies.presentation.screen.destinations.HomeScreenDestination
 import com.fifty.fiftyflixmovies.util.Constants.SPLASH_SCREEN_DURATION
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

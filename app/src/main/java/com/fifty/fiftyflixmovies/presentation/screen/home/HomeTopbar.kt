@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.home
+package com.fifty.fiftyflixmovies.presentation.screen.home
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween

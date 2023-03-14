@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.home
+package com.fifty.fiftyflixmovies.presentation.screen.home
 
 import android.util.Log
 import androidx.compose.runtime.State

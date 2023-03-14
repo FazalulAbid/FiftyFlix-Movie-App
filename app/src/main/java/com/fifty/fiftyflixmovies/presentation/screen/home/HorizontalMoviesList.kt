@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.home
+package com.fifty.fiftyflixmovies.presentation.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fifty.fiftyflixmovies.data.model.Movie
-import com.fifty.fiftyflixmovies.screen.common.MovieItem
+import com.fifty.fiftyflixmovies.presentation.screen.common.MovieItem
 import com.fifty.fiftyflixmovies.util.Constants.IMAGE_BASE_UR
 
 @Composable

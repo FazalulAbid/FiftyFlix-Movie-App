@@ -18,7 +18,7 @@ import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieLoca
 import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemoteDataSourceImpl
 import com.fifty.fiftyflixmovies.data.sharedpreference.SharedPreferenceHelper
 import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
-import com.fifty.fiftyflixmovies.screen.home.HomeViewModel
+import com.fifty.fiftyflixmovies.presentation.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
 import com.fifty.fiftyflixmovies.util.Constants.movieCategories
 import dagger.Module

@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.screen.common
+package com.fifty.fiftyflixmovies.presentation.screen.common
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Icon
@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fifty.fiftyflixmovies.ui.theme.primaryGray
+import com.fifty.fiftyflixmovies.presentation.home.ui.theme.primaryGray
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable

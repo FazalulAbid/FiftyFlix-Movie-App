@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.ui
+package com.fifty.fiftyflixmovies.presentation.home
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,12 +11,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.fifty.fiftyflixmovies.presentation.screen.destinations.HomeScreenDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.fifty.fiftyflixmovies.data.model.Movie
-import com.fifty.fiftyflixmovies.screen.NavGraphs
-import com.fifty.fiftyflixmovies.screen.common.StandardScaffold
-import com.fifty.fiftyflixmovies.screen.destinations.HomeScreenDestination
-import com.fifty.fiftyflixmovies.ui.theme.FiftyFlixMoviesTheme
+import com.fifty.fiftyflixmovies.presentation.screen.common.StandardScaffold
+import com.fifty.fiftyflixmovies.presentation.home.ui.theme.FiftyFlixMoviesTheme
+import com.fifty.fiftyflixmovies.presentation.screen.NavGraphs
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine

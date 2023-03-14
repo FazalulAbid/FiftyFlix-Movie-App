@@ -4,4 +4,5 @@
     <!--  Home Screen-->
     <string name="play">Play</string>
     <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_movie_details">MovieDetailsActivity</string>
 </resources>
