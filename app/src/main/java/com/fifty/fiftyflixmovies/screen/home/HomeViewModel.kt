@@ -1,18 +1,22 @@
 package com.fifty.fiftyflixmovies.screen.home
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
+import com.fifty.fiftyflixmovies.util.Constants.MOVIE_CACHE_LIFETIME_IN_MINUTES
+import com.fifty.fiftyflixmovies.util.Constants.NOW_PLAYING_MOVIES_ID
+import com.fifty.fiftyflixmovies.util.Constants.POPULAR_MOVIES_ID
+import com.fifty.fiftyflixmovies.util.Constants.TOP_RATED_MOVIES_ID
+import com.fifty.fiftyflixmovies.util.Constants.TRENDING_MOVIES_ID
+import com.fifty.fiftyflixmovies.util.Constants.UPCOMING_MOVIES_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,20 +47,18 @@ class HomeViewModel @Inject constructor(
     private val _trendingMovies = MutableLiveData<List<Movie>>()
     val trendingMovies: MutableLiveData<List<Movie>> = _trendingMovies
 
-//    private var _trendingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-//    val trendingMovies: State<Flow<PagingData<Movie>>> = _trendingMovies
+    private val _popularMovies = MutableLiveData<List<Movie>>()
+    val popularMovies: MutableLiveData<List<Movie>> = _popularMovies
 
-    private var _popularMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-    val popularMovies: State<Flow<PagingData<Movie>>> = _popularMovies
+    private val _upcomingMovies = MutableLiveData<List<Movie>>()
+    val upcomingMovies: MutableLiveData<List<Movie>> = _upcomingMovies
 
-    private var _upcomingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-    val upcomingMovies: State<Flow<PagingData<Movie>>> = _upcomingMovies
+    private val _nowPlayingMovies = MutableLiveData<List<Movie>>()
+    val nowPlayingMovies: MutableLiveData<List<Movie>> = _nowPlayingMovies
 
-    private var _nowPlayingMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-    val nowPlayingMovies: State<Flow<PagingData<Movie>>> = _nowPlayingMovies
+    private val _topRatedMovies = MutableLiveData<List<Movie>>()
+    val topRatedMovies: MutableLiveData<List<Movie>> = _topRatedMovies
 
-    private var _topRatedMovies = mutableStateOf<Flow<PagingData<Movie>>>(emptyFlow())
-    val topRatedMovies: State<Flow<PagingData<Movie>>> = _topRatedMovies
 
     init {
         getMovies()
@@ -64,8 +66,19 @@ class HomeViewModel @Inject constructor(
 
     private fun getMovies() {
         viewModelScope.launch {
-            _trendingMovies.value = moviesRepository.getMovies()
+            val lastFetchTime = moviesRepository.getLastFetchedTime()
+            val currentTime = System.currentTimeMillis()
+            if (!(lastFetchTime != null &&
+                        currentTime - lastFetchTime <= (MOVIE_CACHE_LIFETIME_IN_MINUTES * 60 * 1000))
+            ) {
+                moviesRepository.clearAllMoviesFromDB()
+            }
+            _trendingMovies.value = moviesRepository.getMoviesOfCategory(TRENDING_MOVIES_ID)
             _bannerMovie.value = _trendingMovies.value?.random()
+            _popularMovies.value = moviesRepository.getMoviesOfCategory(POPULAR_MOVIES_ID)
+            _upcomingMovies.value = moviesRepository.getMoviesOfCategory(UPCOMING_MOVIES_ID)
+            _nowPlayingMovies.value = moviesRepository.getMoviesOfCategory(NOW_PLAYING_MOVIES_ID)
+            _topRatedMovies.value = moviesRepository.getMoviesOfCategory(TOP_RATED_MOVIES_ID)
         }
     }
 }

@@ -14,4 +14,7 @@ interface MovieCategoryDao {
 
     @Query("SELECT * FROM movie_categories WHERE movieCategoryId = :categoryId")
     suspend fun getMoviesOfCategory(categoryId: Int): List<MovieCategoryWithMovies>
+
+    @Query("DELETE FROM moviecategorymoviecrossref")
+    suspend fun deleteAllMovieCategoryMovieCrossRef()
 }

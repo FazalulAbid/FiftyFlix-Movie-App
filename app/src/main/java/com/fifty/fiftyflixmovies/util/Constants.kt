@@ -10,6 +10,7 @@ object Constants {
     const val DATABASE_NAME = "favorites_database"
     const val TABLE_NAME = "favorites_table"
     const val SPLASH_SCREEN_DURATION = 2000L
+    const val MOVIE_CACHE_LIFETIME_IN_MINUTES = 2
 
     // Database table names.
     const val MOVIES_TABLE = "movies"

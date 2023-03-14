@@ -1,6 +1,8 @@
 package com.fifty.fiftyflixmovies.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -14,6 +16,7 @@ import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieRemoteDat
 import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieCacheDataSourceImpl
 import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieLocalDataSourceImpl
 import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemoteDataSourceImpl
+import com.fifty.fiftyflixmovies.data.sharedpreference.SharedPreferenceHelper
 import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
 import com.fifty.fiftyflixmovies.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
@@ -122,24 +125,39 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesMovieLocalDataSource(movieDao: MovieDao): MovieLocalDataSource =
-        MovieLocalDataSourceImpl(movieDao)
+    fun providesMovieLocalDataSource(
+        movieDao: MovieDao,
+        movieCategoryDao: MovieCategoryDao
+    ): MovieLocalDataSource =
+        MovieLocalDataSourceImpl(movieDao, movieCategoryDao)
 
     @Singleton
     @Provides
     fun providesMovieCacheDataSource(): MovieCacheDataSource =
         MovieCacheDataSourceImpl()
 
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferenceHelper(sharedPreferences: SharedPreferences): SharedPreferenceHelper =
+        SharedPreferenceHelper(sharedPreferences)
+
     @Singleton
     @Provides
     fun providesMoviesRepository(
         movieRemoteDataSource: MovieRemoteDataSource,
         movieLocalDataSource: MovieLocalDataSource,
-        movieCacheDataSource: MovieCacheDataSource
+        movieCacheDataSource: MovieCacheDataSource,
+        sharedPreferenceHelper: SharedPreferenceHelper
     ): MovieRepository = MoviesRepositoryImpl(
         movieRemoteDataSource,
         movieLocalDataSource,
-        movieCacheDataSource
+        movieCacheDataSource,
+        sharedPreferenceHelper
     )
 
     @Provides

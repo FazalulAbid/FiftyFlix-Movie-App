@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,8 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.fifty.fiftyflixmovies.data.model.Movie
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -30,10 +27,10 @@ fun HomeScreen(
 
     val dashboardContentScrollState = rememberScrollState()
     val trendingMovies = viewModel.trendingMovies.observeAsState(emptyList())
-    val popularMovies = viewModel.popularMovies.value.collectAsLazyPagingItems()
-    val upcomingMovies = viewModel.upcomingMovies.value.collectAsLazyPagingItems()
-    val nowPlayingMovies = viewModel.nowPlayingMovies.value.collectAsLazyPagingItems()
-    val topRatedMovies = viewModel.topRatedMovies.value.collectAsLazyPagingItems()
+    val popularMovies = viewModel.popularMovies.observeAsState(emptyList())
+    val upcomingMovies = viewModel.upcomingMovies.observeAsState(emptyList())
+    val nowPlayingMovies = viewModel.nowPlayingMovies.observeAsState(emptyList())
+    val topRatedMovies = viewModel.topRatedMovies.observeAsState(emptyList())
 
     Box(
         modifier = Modifier
@@ -47,10 +44,12 @@ fun HomeScreen(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
-
                 // Trending movies today.
                 LazyColumnMovieItem(listHead = "Trending Movies", movieState = trendingMovies)
-
+                LazyColumnMovieItem(listHead = "Popular Movies", movieState = popularMovies)
+                LazyColumnMovieItem(listHead = "Upcoming Movies", movieState = upcomingMovies)
+                LazyColumnMovieItem(listHead = "Now Playing Movies", movieState = nowPlayingMovies)
+                LazyColumnMovieItem(listHead = "Top Rated Movies", movieState = topRatedMovies)
             }
         }
 

@@ -5,5 +5,5 @@ import com.fifty.fiftyflixmovies.data.model.MovieResponse
 import retrofit2.Response
 
 interface MovieRemoteDataSource {
-    suspend fun getMovies(): Response<MovieList>
+    suspend fun getMoviesOfCategory(movieCategoryId:Int): Response<MovieList>
 }
