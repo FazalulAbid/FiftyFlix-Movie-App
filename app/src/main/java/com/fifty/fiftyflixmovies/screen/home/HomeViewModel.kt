@@ -65,6 +65,7 @@ class HomeViewModel @Inject constructor(
     private fun getMovies() {
         viewModelScope.launch {
             _trendingMovies.value = moviesRepository.getMovies()
+            _bannerMovie.value = _trendingMovies.value?.random()
         }
     }
 }

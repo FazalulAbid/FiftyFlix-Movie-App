@@ -5,6 +5,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -24,33 +28,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val movies = listOf(
-        Movie(
-            1,
-            "Avengers",
-            "Its an Overview",
-            1.00,
-            "Its poster path",
-            "Its Release Date",
-            "Its Title"
-        ),
-        Movie(
-            2,
-            "Avengers Endgame",
-            "Its an Overview",
-            1.00,
-            "Its poster path",
-            "Its Release Date",
-            "Its Title"
-        )
-    )
-
-
-//    viewModel.fetchBannerMovie()
-//    val bannerMovie = viewModel.bannerMovie.collectAsState().value
     val dashboardContentScrollState = rememberScrollState()
-
-    val trendingMovies = viewModel.trendingMovies
+    val trendingMovies = viewModel.trendingMovies.observeAsState(emptyList())
     val popularMovies = viewModel.popularMovies.value.collectAsLazyPagingItems()
     val upcomingMovies = viewModel.upcomingMovies.value.collectAsLazyPagingItems()
     val nowPlayingMovies = viewModel.nowPlayingMovies.value.collectAsLazyPagingItems()
@@ -62,26 +41,15 @@ fun HomeScreen(
     ) {
         Column(Modifier.verticalScroll(dashboardContentScrollState)) {
             // Banner Image.
-            //BannerImage(bannerMovie)
+            val bannerMovie = viewModel.bannerMovie.collectAsState().value
+            BannerImage(bannerMovie)
             Column(
                 modifier = Modifier
                     .padding(16.dp)
             ) {
 
                 // Trending movies today.
-                LazyColumnMovieItem(listHead = "Trending Movies", moviesList = trendingMovies)
-
-//                // Popular Movies.
-//                LazyColumnMovieItem(listHead = "Popular Movies", moviesList = popularMovies)
-//
-//                // Upcoming Movies.
-//                LazyColumnMovieItem(listHead = "Upcoming Movies", moviesList = upcomingMovies)
-//
-//                // Now Playing Movies.
-//                LazyColumnMovieItem(listHead = "Now Playing Movies", moviesList = nowPlayingMovies)
-//
-//                // Upcoming Movies.
-//                LazyColumnMovieItem(listHead = "Top Rated Movies", moviesList = topRatedMovies)
+                LazyColumnMovieItem(listHead = "Trending Movies", movieState = trendingMovies)
 
             }
         }
@@ -92,7 +60,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun LazyColumnMovieItem(listHead: String, moviesList: MutableLiveData<List<Movie>>) {
+fun LazyColumnMovieItem(listHead: String, movieState: State<List<Movie>>) {
     Text(
         text = listHead,
         color = Color.White,
@@ -100,6 +68,6 @@ fun LazyColumnMovieItem(listHead: String, moviesList: MutableLiveData<List<Movie
         fontWeight = FontWeight.Bold
     )
 
-    HorizontalMoviesList(moviesList.value!!)
+    HorizontalMoviesList(movieState)
     Spacer(modifier = Modifier.height(8.dp))
 }

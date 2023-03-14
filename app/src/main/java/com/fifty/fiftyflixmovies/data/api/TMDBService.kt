@@ -20,9 +20,8 @@ interface TMDBService {
 
     @GET("movie/popular")
     suspend fun getPopularMovies(
-        @Query("page") page: Int = STARTING_PAGE_INDEX,
-        @Query("api_key") apiKey: String,
-        @Query("language") language: String = "en"
+        @Query("api_key")
+        apiKey: String
     ): Response<MovieList>
 
     @GET("movie/upcoming")

@@ -2,12 +2,11 @@ package com.fifty.fiftyflixmovies.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fifty.fiftyflixmovies.BuildConfig.API_KEY
 import com.fifty.fiftyflixmovies.data.api.TMDBService
-import com.fifty.fiftyflixmovies.data.db.GenreDao
-import com.fifty.fiftyflixmovies.data.db.MovieCategoryDao
-import com.fifty.fiftyflixmovies.data.db.MovieDao
-import com.fifty.fiftyflixmovies.data.db.TMDBDatabase
+import com.fifty.fiftyflixmovies.data.db.*
 import com.fifty.fiftyflixmovies.data.repository.movie.MoviesRepositoryImpl
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieCacheDataSource
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieLocalDataSource
@@ -18,11 +17,15 @@ import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemo
 import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
 import com.fifty.fiftyflixmovies.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
+import com.fifty.fiftyflixmovies.util.Constants.movieCategories
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -64,14 +67,37 @@ object AppModule {
             .create(TMDBService::class.java)
     }
 
+    @Volatile
+    private var INSTANCE: TMDBDatabase? = null
+
+    private class TBDBDatabaseCallback(
+    ) : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            INSTANCE?.let {
+                CoroutineScope(Dispatchers.IO).launch {
+                    it.movieCategoryDao().insertMovieCategory(movieCategories)
+                }
+            }
+        }
+    }
+
     @Singleton
     @Provides
-    fun providesTMDBDatabase(@ApplicationContext applicationContext: Context): TMDBDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            TMDBDatabase::class.java,
-            "tmdb_db"
-        ).build()
+    fun providesTMDBDatabase(
+        @ApplicationContext applicationContext: Context
+    ): TMDBDatabase {
+        return INSTANCE ?: synchronized(this) {
+            val instance = Room.databaseBuilder(
+                applicationContext,
+                TMDBDatabase::class.java,
+                "tmdb_db"
+            )
+                .addCallback(TBDBDatabaseCallback())
+                .build()
+                .also { INSTANCE = it }
+            instance
+        }
     }
 
     @Singleton

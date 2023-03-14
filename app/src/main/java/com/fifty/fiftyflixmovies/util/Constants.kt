@@ -1,5 +1,7 @@
 package com.fifty.fiftyflixmovies.util
 
+import com.fifty.fiftyflixmovies.data.model.MovieCategory
+
 object Constants {
     const val BASE_URL = "https://api.themoviedb.org/3/"
     const val STARTING_PAGE_INDEX = 0
@@ -20,5 +22,13 @@ object Constants {
     const val UPCOMING_MOVIES_ID = 1003
     const val NOW_PLAYING_MOVIES_ID = 1004
     const val TOP_RATED_MOVIES_ID = 1005
+
+    val movieCategories = listOf(
+        MovieCategory(TRENDING_MOVIES_ID, "Trending Movies"),
+        MovieCategory(POPULAR_MOVIES_ID, "Popular Movies"),
+        MovieCategory(UPCOMING_MOVIES_ID, "Upcoming Movies"),
+        MovieCategory(NOW_PLAYING_MOVIES_ID, "Now Playing Movies"),
+        MovieCategory(TOP_RATED_MOVIES_ID, "Top Rated Movies"),
+    )
 
 }
