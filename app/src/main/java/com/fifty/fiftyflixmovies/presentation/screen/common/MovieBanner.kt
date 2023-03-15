@@ -25,7 +25,7 @@ import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.util.Constants
 
 @Composable
-fun BannerImage(bannerMovie: Movie?) {
+fun MovieBanner(bannerMovie: Movie?) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()

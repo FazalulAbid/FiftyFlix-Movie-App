@@ -1,6 +1,5 @@
 package com.fifty.fiftyflixmovies.presentation.screen.home
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -59,6 +58,10 @@ class HomeViewModel @Inject constructor(
     private val _topRatedMovies = MutableLiveData<List<Movie>>()
     val topRatedMovies: MutableLiveData<List<Movie>> = _topRatedMovies
 
+    // Movie Detail.
+    private val _selectedMovie = MutableLiveData<Movie>()
+    val selectedMovie: MutableLiveData<Movie> = _selectedMovie
+
 
     init {
         getMovies()
@@ -81,4 +84,11 @@ class HomeViewModel @Inject constructor(
             _topRatedMovies.value = moviesRepository.getMoviesOfCategory(TOP_RATED_MOVIES_ID)
         }
     }
+
+    fun getMovie(movieId: Int) {
+        viewModelScope.launch {
+            _selectedMovie.value = moviesRepository.getMovie(movieId)
+        }
+    }
+
 }

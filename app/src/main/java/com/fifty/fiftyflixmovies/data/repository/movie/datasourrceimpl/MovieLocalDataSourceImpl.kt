@@ -14,6 +14,9 @@ class MovieLocalDataSourceImpl(
     private val movieCategoryDao: MovieCategoryDao
 ) : MovieLocalDataSource {
 
+    override suspend fun getMovie(movieId: Int): Movie =
+        movieDao.getMovie(movieId)
+
     override suspend fun getMoviesFromDB(movieCategoryId: Int): List<Movie> {
         val movieCategoryWithMovies = movieDao.getMoviesOfCategory(movieCategoryId)
         val list = ArrayList<Movie>()

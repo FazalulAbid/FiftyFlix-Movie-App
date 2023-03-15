@@ -17,6 +17,9 @@ class MoviesRepositoryImpl @Inject constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : MovieRepository {
 
+    override suspend fun getMovie(movieId: Int): Movie =
+        movieLocalDataSource.getMovie(movieId)
+
     override suspend fun getMoviesOfCategory(movieCategoryId: Int): List<Movie> {
         return getMoviesFromCache(movieCategoryId)
     }

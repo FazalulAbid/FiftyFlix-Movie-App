@@ -1,4 +1,4 @@
-package com.fifty.fiftyflixmovies.presentation.home.ui.theme
+package com.fifty.fiftyflixmovies.presentation.activity.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

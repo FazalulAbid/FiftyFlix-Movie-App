@@ -40,13 +40,19 @@ fun SplashScreen(
 
         LaunchedEffect(key1 = true) {
             withContext(Dispatchers.Main) {
-                scale.animateTo(targetValue = 1.5f,
+                scale.animateTo(
+                    targetValue = 1.5f,
                     animationSpec = tween(durationMillis = 700, easing = {
                         overshootInterpolator.getInterpolation(it)
-                    }))
+                    })
+                )
 
                 delay(SPLASH_SCREEN_DURATION)
-                navController.navigate(Screen.HomeScreen.route)
+                navController.navigate(Screen.HomeScreen.route) {
+                    popUpTo(Screen.SplashScreen.route) {
+                        inclusive = true
+                    }
+                }
             }
         }
 

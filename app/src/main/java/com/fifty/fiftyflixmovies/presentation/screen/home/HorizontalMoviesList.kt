@@ -9,19 +9,20 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fifty.fiftyflixmovies.data.model.Movie
+import com.fifty.fiftyflixmovies.presentation.Screen
 import com.fifty.fiftyflixmovies.presentation.screen.common.MovieItem
 import com.fifty.fiftyflixmovies.util.Constants.IMAGE_BASE_UR
 
 @Composable
-fun HorizontalMoviesList(movieState: State<List<Movie>>) {
+fun HorizontalMoviesList(movieState: State<List<Movie>>, navController: NavController) {
     Box(content = {
         Spacer(modifier = Modifier.height(5.dp))
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(220.dp),
-            contentAlignment = Alignment.Center
+                .height(220.dp), contentAlignment = Alignment.Center
         ) {
             LazyRow(content = {
                 items(movieState.value) { movie ->
@@ -30,13 +31,11 @@ fun HorizontalMoviesList(movieState: State<List<Movie>>) {
                             .height(200.dp)
                             .width(140.dp)
                             .clickable {
-                                //navigator.navigate(MovieDetailsScreenDestination(film?.id!!))
-                            },
-                        imageUrl = "${IMAGE_BASE_UR}/${movie.posterPath}"
+                                navController.navigate(Screen.DetailScreen.withArgs(movie.movieId.toString()))
+                            }, imageUrl = "${IMAGE_BASE_UR}/${movie.posterPath}"
                     )
                 }
-            }
-            )
+            })
         }
     })
 }

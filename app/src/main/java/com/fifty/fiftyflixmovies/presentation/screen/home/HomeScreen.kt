@@ -48,7 +48,7 @@ fun HomeScreen(
                     Column(Modifier.verticalScroll(dashboardContentScrollState)) {
                         // Banner Image.
                         val bannerMovie = viewModel.bannerMovie.collectAsState().value
-                        BannerImage(bannerMovie)
+                        MovieBanner(bannerMovie)
                         Column(
                             modifier = Modifier
                                 .padding(16.dp)
@@ -56,23 +56,28 @@ fun HomeScreen(
                             // Trending movies today.
                             LazyColumnMovieItem(
                                 listHead = "Trending Movies",
-                                movieState = trendingMovies
+                                movieState = trendingMovies,
+                                navController = navController
                             )
                             LazyColumnMovieItem(
                                 listHead = "Popular Movies",
-                                movieState = popularMovies
+                                movieState = popularMovies,
+                                navController = navController
                             )
                             LazyColumnMovieItem(
                                 listHead = "Upcoming Movies",
-                                movieState = upcomingMovies
+                                movieState = upcomingMovies,
+                                navController = navController
                             )
                             LazyColumnMovieItem(
                                 listHead = "Now Playing Movies",
-                                movieState = nowPlayingMovies
+                                movieState = nowPlayingMovies,
+                                navController = navController
                             )
                             LazyColumnMovieItem(
                                 listHead = "Top Rated Movies",
-                                movieState = topRatedMovies
+                                movieState = topRatedMovies,
+                                navController = navController
                             )
                         }
                     }
@@ -88,7 +93,11 @@ fun HomeScreen(
 }
 
 @Composable
-fun LazyColumnMovieItem(listHead: String, movieState: State<List<Movie>>) {
+fun LazyColumnMovieItem(
+    listHead: String,
+    movieState: State<List<Movie>>,
+    navController: NavController
+) {
     Text(
         text = listHead,
         color = Color.White,
@@ -96,6 +105,6 @@ fun LazyColumnMovieItem(listHead: String, movieState: State<List<Movie>>) {
         fontWeight = FontWeight.Bold
     )
 
-    HorizontalMoviesList(movieState)
+    HorizontalMoviesList(movieState, navController)
     Spacer(modifier = Modifier.height(8.dp))
 }
