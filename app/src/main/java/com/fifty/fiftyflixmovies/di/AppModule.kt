@@ -1,12 +1,34 @@
 package com.fifty.fiftyflixmovies.di
 
-import com.fifty.fiftyflixmovies.data.remote.TMDBApi
-import com.fifty.fiftyflixmovies.data.repository.MoviesRepository
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.fifty.fiftyflixmovies.BuildConfig.API_KEY
+import com.fifty.fiftyflixmovies.data.api.TMDBService
+import com.fifty.fiftyflixmovies.data.db.*
+import com.fifty.fiftyflixmovies.data.repository.movie.MoviesRepositoryImpl
+import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieCacheDataSource
+import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieLocalDataSource
+import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieRemoteDataSource
+import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieCacheDataSourceImpl
+import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieLocalDataSourceImpl
+import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemoteDataSourceImpl
+import com.fifty.fiftyflixmovies.data.sharedpreference.SharedPreferenceHelper
+import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
+import com.fifty.fiftyflixmovies.presentation.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
+import com.fifty.fiftyflixmovies.util.Constants.movieCategories
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -20,9 +42,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-    }
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+
 
     @Singleton
     @Provides
@@ -39,16 +61,106 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesTMDBApi(okHttpClient: OkHttpClient): TMDBApi {
+    fun providesTMDBApi(okHttpClient: OkHttpClient): TMDBService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
-            .create(TMDBApi::class.java)
+            .create(TMDBService::class.java)
+    }
+
+    @Volatile
+    private var INSTANCE: TMDBDatabase? = null
+
+    private class TBDBDatabaseCallback(
+    ) : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            super.onCreate(db)
+            INSTANCE?.let {
+                CoroutineScope(Dispatchers.IO).launch {
+                    it.movieCategoryDao().insertMovieCategory(movieCategories)
+                }
+            }
+        }
     }
 
     @Singleton
     @Provides
-    fun providesMoviesRepository(api: TMDBApi) = MoviesRepository(api)
+    fun providesTMDBDatabase(
+        @ApplicationContext applicationContext: Context
+    ): TMDBDatabase {
+        return INSTANCE ?: synchronized(this) {
+            val instance = Room.databaseBuilder(
+                applicationContext,
+                TMDBDatabase::class.java,
+                "tmdb_db"
+            )
+                .addCallback(TBDBDatabaseCallback())
+                .build()
+                .also { INSTANCE = it }
+            instance
+        }
+    }
+
+    @Singleton
+    @Provides
+    fun providesMovieDao(database: TMDBDatabase): MovieDao =
+        database.movieDao()
+
+    @Singleton
+    @Provides
+    fun providesGenreDao(database: TMDBDatabase): GenreDao =
+        database.genreDao()
+
+    @Singleton
+    @Provides
+    fun providesMovieCategoryDao(database: TMDBDatabase): MovieCategoryDao =
+        database.movieCategoryDao()
+
+    @Singleton
+    @Provides
+    fun providesMovieRemoteDataSource(tmdbService: TMDBService): MovieRemoteDataSource =
+        MovieRemoteDataSourceImpl(tmdbService, API_KEY)
+
+    @Singleton
+    @Provides
+    fun providesMovieLocalDataSource(
+        movieDao: MovieDao,
+        movieCategoryDao: MovieCategoryDao
+    ): MovieLocalDataSource =
+        MovieLocalDataSourceImpl(movieDao, movieCategoryDao)
+
+    @Singleton
+    @Provides
+    fun providesMovieCacheDataSource(): MovieCacheDataSource =
+        MovieCacheDataSourceImpl()
+
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferenceHelper(sharedPreferences: SharedPreferences): SharedPreferenceHelper =
+        SharedPreferenceHelper(sharedPreferences)
+
+    @Singleton
+    @Provides
+    fun providesMoviesRepository(
+        movieRemoteDataSource: MovieRemoteDataSource,
+        movieLocalDataSource: MovieLocalDataSource,
+        movieCacheDataSource: MovieCacheDataSource,
+        sharedPreferenceHelper: SharedPreferenceHelper
+    ): MovieRepository = MoviesRepositoryImpl(
+        movieRemoteDataSource,
+        movieLocalDataSource,
+        movieCacheDataSource,
+        sharedPreferenceHelper
+    )
+
+    @Provides
+    fun providesHomeViewModel(movieRepository: MovieRepository): HomeViewModel =
+        HomeViewModel(movieRepository)
 }
