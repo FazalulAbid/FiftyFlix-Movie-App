@@ -11,12 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.fifty.fiftyflixmovies.presentation.home.ui.theme.primaryGray
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 fun StandardToolbar(
     modifier: Modifier = Modifier,
-    navigator: DestinationsNavigator,
     showBackArrow: Boolean = false,
 //    navActions: @Composable RowScope.() -> Unit = {},
     title: @Composable () -> Unit = {}
@@ -26,7 +24,7 @@ fun StandardToolbar(
         navigationIcon = if (showBackArrow) {
             {
                 IconButton(onClick = {
-                    navigator.navigateUp()
+
                 }) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,

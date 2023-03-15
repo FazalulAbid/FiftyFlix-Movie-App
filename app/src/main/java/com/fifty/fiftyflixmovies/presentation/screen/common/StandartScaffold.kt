@@ -17,7 +17,6 @@ import com.fifty.fiftyflixmovies.presentation.home.ui.theme.primaryPink
 
 @Composable
 fun StandardScaffold(
-    navController: NavController,
     showBottomBar: Boolean = true,
     items: List<BottomNavItem> = listOf(
         BottomNavItem.Home,
@@ -32,8 +31,6 @@ fun StandardScaffold(
                     contentColor = Color.White,
                     elevation = 5.dp
                 ) {
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-                    val currentDestination = navBackStackEntry?.destination
                     items.forEach { item ->
                         BottomNavigationItem(
                             icon = {
@@ -51,18 +48,8 @@ fun StandardScaffold(
                             selectedContentColor = primaryPink,
                             unselectedContentColor = primaryGray,
                             alwaysShowLabel = true,
-                            selected = currentDestination?.route?.contains(item.destination.route) == true,
-                            onClick = {
-                                navController.navigate(item.destination.route) {
-                                    navController.graph.startDestinationRoute?.let { screen_route ->
-                                        popUpTo(screen_route) {
-                                            saveState = true
-                                        }
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
+                            selected = true,
+                            onClick = {}
                         )
                     }
                 }

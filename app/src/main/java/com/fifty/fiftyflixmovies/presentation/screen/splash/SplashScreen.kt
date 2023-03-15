@@ -12,19 +12,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fifty.fiftyflixmovies.R
-import com.fifty.fiftyflixmovies.presentation.screen.destinations.HomeScreenDestination
+import com.fifty.fiftyflixmovies.presentation.Screen
 import com.fifty.fiftyflixmovies.util.Constants.SPLASH_SCREEN_DURATION
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-@Destination(start = true)
 @Composable
 fun SplashScreen(
-    navigator: DestinationsNavigator
+    navController: NavController
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -42,19 +40,13 @@ fun SplashScreen(
 
         LaunchedEffect(key1 = true) {
             withContext(Dispatchers.Main) {
-                scale.animateTo(
-                    targetValue = 1.5f,
-                    animationSpec = tween(
-                        durationMillis = 700,
-                        easing = {
-                            overshootInterpolator.getInterpolation(it)
-                        }
-                    )
-                )
+                scale.animateTo(targetValue = 1.5f,
+                    animationSpec = tween(durationMillis = 700, easing = {
+                        overshootInterpolator.getInterpolation(it)
+                    }))
 
                 delay(SPLASH_SCREEN_DURATION)
-                navigator.popBackStack()
-                navigator.navigate(HomeScreenDestination)
+                navController.navigate(Screen.HomeScreen.route)
             }
         }
 

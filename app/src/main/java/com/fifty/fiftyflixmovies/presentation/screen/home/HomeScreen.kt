@@ -3,7 +3,9 @@ package com.fifty.fiftyflixmovies.presentation.screen.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -14,14 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.fifty.fiftyflixmovies.data.model.Movie
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.fifty.fiftyflixmovies.presentation.screen.common.StandardScaffold
 
-@Destination
 @Composable
 fun HomeScreen(
-    navigator: DestinationsNavigator,
+    navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
@@ -32,30 +33,58 @@ fun HomeScreen(
     val nowPlayingMovies = viewModel.nowPlayingMovies.observeAsState(emptyList())
     val topRatedMovies = viewModel.topRatedMovies.observeAsState(emptyList())
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
     ) {
-        Column(Modifier.verticalScroll(dashboardContentScrollState)) {
-            // Banner Image.
-            val bannerMovie = viewModel.bannerMovie.collectAsState().value
-            BannerImage(bannerMovie)
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-            ) {
-                // Trending movies today.
-                LazyColumnMovieItem(listHead = "Trending Movies", movieState = trendingMovies)
-                LazyColumnMovieItem(listHead = "Popular Movies", movieState = popularMovies)
-                LazyColumnMovieItem(listHead = "Upcoming Movies", movieState = upcomingMovies)
-                LazyColumnMovieItem(listHead = "Now Playing Movies", movieState = nowPlayingMovies)
-                LazyColumnMovieItem(listHead = "Top Rated Movies", movieState = topRatedMovies)
+        StandardScaffold(
+            showBottomBar = false
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    Column(Modifier.verticalScroll(dashboardContentScrollState)) {
+                        // Banner Image.
+                        val bannerMovie = viewModel.bannerMovie.collectAsState().value
+                        BannerImage(bannerMovie)
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            // Trending movies today.
+                            LazyColumnMovieItem(
+                                listHead = "Trending Movies",
+                                movieState = trendingMovies
+                            )
+                            LazyColumnMovieItem(
+                                listHead = "Popular Movies",
+                                movieState = popularMovies
+                            )
+                            LazyColumnMovieItem(
+                                listHead = "Upcoming Movies",
+                                movieState = upcomingMovies
+                            )
+                            LazyColumnMovieItem(
+                                listHead = "Now Playing Movies",
+                                movieState = nowPlayingMovies
+                            )
+                            LazyColumnMovieItem(
+                                listHead = "Top Rated Movies",
+                                movieState = topRatedMovies
+                            )
+                        }
+                    }
+
+                    // Custom home top-bar.
+                    HomeTopBar(dashboardContentScrollState)
+                }
             }
         }
-
-        // Custom home top-bar.
-        HomeTopBar(dashboardContentScrollState)
     }
+
+
 }
 
 @Composable
