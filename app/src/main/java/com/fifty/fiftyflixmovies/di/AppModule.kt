@@ -9,6 +9,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fifty.fiftyflixmovies.BuildConfig.API_KEY
 import com.fifty.fiftyflixmovies.data.api.TMDBService
 import com.fifty.fiftyflixmovies.data.db.*
+import com.fifty.fiftyflixmovies.data.repository.download.DownloadRepositoryImpl
+import com.fifty.fiftyflixmovies.data.repository.download.datasource.ThumbnailLocalDataSource
+import com.fifty.fiftyflixmovies.data.repository.download.datasourceimpl.ThumbnailLocalDataSourceImpl
 import com.fifty.fiftyflixmovies.data.repository.movie.MoviesRepositoryImpl
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieCacheDataSource
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieLocalDataSource
@@ -17,10 +20,15 @@ import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieCach
 import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieLocalDataSourceImpl
 import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemoteDataSourceImpl
 import com.fifty.fiftyflixmovies.data.sharedpreference.SharedPreferenceHelper
+import com.fifty.fiftyflixmovies.domain.repository.DownloadRepository
 import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
+import com.fifty.fiftyflixmovies.presentation.screen.download.DownloadViewModel
 import com.fifty.fiftyflixmovies.presentation.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
 import com.fifty.fiftyflixmovies.util.Constants.movieCategories
+import com.fifty.fiftyflixmovies.util.FirebaseConstants
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -163,4 +171,33 @@ object AppModule {
     @Provides
     fun providesHomeViewModel(movieRepository: MovieRepository): HomeViewModel =
         HomeViewModel(movieRepository)
+
+    @Singleton
+    @Provides
+    fun providesFirebaseStorage(): StorageReference =
+        FirebaseStorage.getInstance().getReference(FirebaseConstants.ROOT_DIRECTORY)
+
+    @Singleton
+    @Provides
+    fun providesThumbnailDao(database: TMDBDatabase): ThumbnailDao =
+        database.thumbnailDao()
+
+    @Singleton
+    @Provides
+    fun providesThumbnailLocalDataSource(
+        thumbnailDao: ThumbnailDao
+    ): ThumbnailLocalDataSource =
+        ThumbnailLocalDataSourceImpl(thumbnailDao)
+
+    @Singleton
+    @Provides
+    fun providesDownloadRepository(
+        thumbnailLocalDataSource: ThumbnailLocalDataSource,
+        storageReference: StorageReference
+    ): DownloadRepository =
+        DownloadRepositoryImpl(thumbnailLocalDataSource, storageReference)
+
+    @Provides
+    fun providesDownloadsViewModel(downloadViewModel: DownloadRepository): DownloadViewModel =
+        DownloadViewModel(downloadViewModel)
 }

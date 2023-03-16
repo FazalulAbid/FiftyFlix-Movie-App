@@ -83,7 +83,7 @@ fun HomeScreen(
                     }
 
                     // Custom home top-bar.
-                    HomeTopBar(dashboardContentScrollState)
+                    HomeTopBar(dashboardContentScrollState, navController)
                 }
             }
         }

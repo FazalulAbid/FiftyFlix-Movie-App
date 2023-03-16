@@ -7,10 +7,10 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,10 +21,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.fifty.fiftyflixmovies.R
+import com.fifty.fiftyflixmovies.presentation.Screen
 
 @Composable
-fun HomeTopBar(dashboardContentScrollState: ScrollState) {
+fun HomeTopBar(dashboardContentScrollState: ScrollState, navController: NavController) {
     Column {
         // Hiding App bar with netflix logo.
         Box(
@@ -91,17 +93,20 @@ fun HomeTopBar(dashboardContentScrollState: ScrollState) {
             Row(
                 modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically
             ) {
-                TopAppBarListButton(buttonText = "Movies")
-                TopAppBarListButton(buttonText = "TV Shows")
+                TopAppBarListButton(buttonText = "Movies", navController, Screen.HomeScreen)
+                TopAppBarListButton(buttonText = "Download", navController, Screen.DownloadScreen)
             }
         }
     }
 }
 
 @Composable
-fun RowScope.TopAppBarListButton(buttonText: String) {
-    androidx.compose.material3.Button(
-        onClick = {},
+fun RowScope.TopAppBarListButton(buttonText: String, navController: NavController, screen: Screen) {
+    Button(
+        onClick = {
+            if (screen == Screen.DownloadScreen)
+                navController.navigate(screen.route)
+        },
         modifier = Modifier
             .weight(1f)
             .fillMaxHeight(),
@@ -110,7 +115,7 @@ fun RowScope.TopAppBarListButton(buttonText: String) {
             containerColor = Color.Transparent, contentColor = Color.White
         )
     ) {
-        androidx.compose.material3.Text(
+        Text(
             text = buttonText,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,

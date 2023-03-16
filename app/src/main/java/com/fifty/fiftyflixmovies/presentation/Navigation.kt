@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.fifty.fiftyflixmovies.presentation.screen.detailscreen.DetailScreen
+import com.fifty.fiftyflixmovies.presentation.screen.download.DownloadScreen
 import com.fifty.fiftyflixmovies.presentation.screen.home.HomeScreen
 import com.fifty.fiftyflixmovies.presentation.screen.splash.SplashScreen
 
@@ -42,6 +43,9 @@ fun Navigation() {
                 navController = navController,
                 movieId = entry.arguments?.getInt("movieId")
             )
+        }
+        composable(route = Screen.DownloadScreen.route) {
+            DownloadScreen(navController = navController)
         }
     }
 }

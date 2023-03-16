@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import com.fifty.fiftyflixmovies.data.model.Genre
 import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.data.model.MovieCategory
+import com.fifty.fiftyflixmovies.data.model.Thumbnail
 import com.fifty.fiftyflixmovies.data.model.relations.MovieCategoryMovieCrossRef
 import com.fifty.fiftyflixmovies.data.model.relations.MovieGenreCrossRef
 
@@ -14,7 +15,8 @@ import com.fifty.fiftyflixmovies.data.model.relations.MovieGenreCrossRef
         Genre::class,
         MovieGenreCrossRef::class,
         MovieCategory::class,
-        MovieCategoryMovieCrossRef::class
+        MovieCategoryMovieCrossRef::class,
+        Thumbnail::class
     ],
     version = 1, exportSchema = false
 )
@@ -22,4 +24,5 @@ abstract class TMDBDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
     abstract fun genreDao(): GenreDao
     abstract fun movieCategoryDao(): MovieCategoryDao
+    abstract fun thumbnailDao(): ThumbnailDao
 }

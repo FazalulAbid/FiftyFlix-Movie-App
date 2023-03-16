@@ -16,6 +16,7 @@ object Constants {
     const val MOVIES_TABLE = "movies"
     const val GENRES_TABLE = "genres"
     const val MOVIE_CATEGORIES_TABLE = "movie_categories"
+    const val THUMBNAIL_TABLE = "thumbnail"
 
     // Movies categories.
     const val TRENDING_MOVIES_ID = 1001
@@ -31,5 +32,4 @@ object Constants {
         MovieCategory(NOW_PLAYING_MOVIES_ID, "Now Playing Movies"),
         MovieCategory(TOP_RATED_MOVIES_ID, "Top Rated Movies"),
     )
-
 }
