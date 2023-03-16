@@ -4,23 +4,30 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import com.fifty.fiftyflixmovies.R
+import com.fifty.fiftyflixmovies.data.model.Thumbnail
 import com.fifty.fiftyflixmovies.util.UiState
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -29,6 +36,8 @@ fun DownloadScreen(
     navController: NavController,
     downloadViewModel: DownloadViewModel = hiltViewModel()
 ) {
+
+    val movieThumbnails = downloadViewModel.movieThumbnails.observeAsState(emptyList())
     // Create a launcher for the gallery picker
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -73,20 +82,35 @@ fun DownloadScreen(
             LazyVerticalGrid(
                 cells = GridCells.Fixed(3),
                 content = {
-                    items(20) { item ->
-                        Box(
-                            modifier = Modifier
-                                .aspectRatio(1f)
-                                .padding(1.dp)
-                                .background(Color.Yellow),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(text = "Item $item")
-                        }
+                    items(movieThumbnails.value) { thumbnail ->
+                        MovieThumbnailItem(thumbnail = thumbnail)
                     }
                 }
             )
         }
+    }
+}
+
+@Composable
+fun MovieThumbnailItem(thumbnail: Thumbnail) {
+    Box(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .padding(1.dp)
+            .background(Color.Yellow),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = rememberImagePainter(
+                data = thumbnail.thumbnailUrl, builder = {
+                    placeholder(R.drawable.fifty_f_logo)
+                    crossfade(true)
+                }
+            ),
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            contentDescription = "Movie Thumbnail"
+        )
     }
 }
 
@@ -101,7 +125,7 @@ fun uploadMovieThumbnail(imageUri: Uri?, viewModel: DownloadViewModel) {
 
                 }
                 is UiState.Success -> {
-
+                    viewModel.getMovieThumbnails()
                 }
             }
         }

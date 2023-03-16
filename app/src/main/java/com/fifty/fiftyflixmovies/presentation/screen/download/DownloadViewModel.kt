@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fifty.fiftyflixmovies.data.model.Thumbnail
 import com.fifty.fiftyflixmovies.domain.repository.DownloadRepository
 import com.fifty.fiftyflixmovies.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,11 +17,17 @@ class DownloadViewModel @Inject constructor(
     private val downloadRepository: DownloadRepository
 ) : ViewModel() {
 
-    private val _selectedImageUri = MutableLiveData<Uri?>()
-    val selectedImageUri: LiveData<Uri?> = _selectedImageUri
+    private val _movieThumbnails = MutableLiveData<List<Thumbnail>>()
+    val movieThumbnails: MutableLiveData<List<Thumbnail>> = _movieThumbnails
 
-    fun setSelectedImageUri(uri: Uri?) {
-        _selectedImageUri.value = uri
+    init {
+        getMovieThumbnails()
+    }
+
+    fun getMovieThumbnails() {
+        viewModelScope.launch {
+            _movieThumbnails.value = downloadRepository.getMovieThumbnails()
+        }
     }
 
     fun uploadMovieThumbnail(imageUri: Uri, onResult: (UiState<Uri>) -> Unit) {

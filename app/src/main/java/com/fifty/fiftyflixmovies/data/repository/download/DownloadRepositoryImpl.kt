@@ -18,11 +18,14 @@ class DownloadRepositoryImpl @Inject constructor(
     private val storageReference: StorageReference
 ) : DownloadRepository {
 
+    override suspend fun getMovieThumbnails(): List<Thumbnail> =
+        thumbnailLocalDataSource.getThumbnails()
+
     override suspend fun uploadMovieThumbnail(imageUri: Uri, onResult: (UiState<Uri>) -> Unit) {
         try {
             val reference = storageReference.child(MOVIE_THUMBNAILS_DIRECTORY)
                 .child(System.currentTimeMillis().toString())
-            storageReference.putFile(imageUri).addOnCompleteListener { thumbnailImageTask ->
+            reference.putFile(imageUri).addOnCompleteListener { thumbnailImageTask ->
                 if (thumbnailImageTask.isSuccessful) {
                     reference.downloadUrl.addOnSuccessListener { downloadableUri ->
                         // Save download link to local database.
@@ -30,8 +33,8 @@ class DownloadRepositoryImpl @Inject constructor(
                             thumbnailLocalDataSource.saveThumbnailToDB(
                                 Thumbnail(thumbnailUrl = downloadableUri.toString())
                             )
+                            onResult.invoke(UiState.Success(downloadableUri))
                         }
-                        onResult.invoke(UiState.Success(downloadableUri))
                     }
                 }
             }
