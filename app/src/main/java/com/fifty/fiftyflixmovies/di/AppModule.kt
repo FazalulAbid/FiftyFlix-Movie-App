@@ -22,7 +22,9 @@ import com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl.MovieRemo
 import com.fifty.fiftyflixmovies.data.sharedpreference.SharedPreferenceHelper
 import com.fifty.fiftyflixmovies.domain.repository.DownloadRepository
 import com.fifty.fiftyflixmovies.domain.repository.MovieRepository
+import com.fifty.fiftyflixmovies.presentation.screen.download.AndroidDownloader
 import com.fifty.fiftyflixmovies.presentation.screen.download.DownloadViewModel
+import com.fifty.fiftyflixmovies.presentation.screen.download.Downloader
 import com.fifty.fiftyflixmovies.presentation.screen.home.HomeViewModel
 import com.fifty.fiftyflixmovies.util.Constants.BASE_URL
 import com.fifty.fiftyflixmovies.util.Constants.movieCategories
@@ -197,7 +199,16 @@ object AppModule {
     ): DownloadRepository =
         DownloadRepositoryImpl(thumbnailLocalDataSource, storageReference)
 
+    @Singleton
     @Provides
-    fun providesDownloadsViewModel(downloadViewModel: DownloadRepository): DownloadViewModel =
-        DownloadViewModel(downloadViewModel)
+    fun providesDownloader(@ApplicationContext context: Context): Downloader =
+        AndroidDownloader(context)
+
+    @Provides
+    fun providesDownloadsViewModel(
+        downloadViewModel: DownloadRepository,
+        downloader: Downloader
+    ): DownloadViewModel =
+        DownloadViewModel(downloadViewModel, downloader)
+
 }

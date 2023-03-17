@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -83,7 +84,9 @@ fun DownloadScreen(
                 cells = GridCells.Fixed(3),
                 content = {
                     items(movieThumbnails.value) { thumbnail ->
-                        MovieThumbnailItem(thumbnail = thumbnail)
+                        MovieThumbnailItem(modifier = Modifier.clickable {
+                            downloadViewModel.downloadImage(thumbnail.thumbnailUrl)
+                        }, thumbnail = thumbnail)
                     }
                 }
             )
@@ -92,9 +95,9 @@ fun DownloadScreen(
 }
 
 @Composable
-fun MovieThumbnailItem(thumbnail: Thumbnail) {
+fun MovieThumbnailItem(modifier: Modifier, thumbnail: Thumbnail) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .aspectRatio(1f)
             .padding(1.dp)
             .background(Color.Yellow),

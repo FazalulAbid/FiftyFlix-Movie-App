@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "327881885736",
+    "project_id": "fiftyflix-movies",
+    "storage_bucket": "fiftyflix-movies.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327881885736:android:aa01ff641409d35a7bcd1d",
+        "android_client_info": {
+          "package_name": "com.fifty.fiftyflixmovies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327881885736-rk1b9e7hmov5ghojs4lngk6vs07pj8fl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh3wu6CvwOd78v6GIMOJNLytv4qFt9rI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327881885736-rk1b9e7hmov5ghojs4lngk6vs07pj8fl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -5,6 +5,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -29,24 +30,8 @@ fun SplashScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        val scale = remember {
-            Animatable(0f)
-        }
-
-        val overshootInterpolator = remember {
-            OvershootInterpolator(2.5f)
-        }
-
         LaunchedEffect(key1 = true) {
             withContext(Dispatchers.Main) {
-                scale.animateTo(
-                    targetValue = 1.5f,
-                    animationSpec = tween(durationMillis = 700, easing = {
-                        overshootInterpolator.getInterpolation(it)
-                    })
-                )
-
                 delay(SPLASH_SCREEN_DURATION)
                 navController.navigate(Screen.HomeScreen.route) {
                     popUpTo(Screen.SplashScreen.route) {
