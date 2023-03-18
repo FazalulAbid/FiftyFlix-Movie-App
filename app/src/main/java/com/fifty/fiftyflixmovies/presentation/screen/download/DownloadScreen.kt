@@ -1,8 +1,11 @@
 package com.fifty.fiftyflixmovies.presentation.screen.download
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,11 +18,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,9 +40,16 @@ import com.fifty.fiftyflixmovies.util.UiState
 @Composable
 fun DownloadScreen(
     navController: NavController,
-    downloadViewModel: DownloadViewModel = hiltViewModel()
+    downloadViewModel: DownloadViewModel = hiltViewModel(),
 ) {
-
+    val context = LocalContext.current
+    val progress by downloadViewModel.progress.observeAsState(0)
+    val animatedProgress by animateIntAsState(
+        targetValue = progress,
+        animationSpec = tween(durationMillis = 1000)
+    )
+    val isDownloadStarted by downloadViewModel.isDownloadStarted.observeAsState(false)
+    val isDownloadComplete by downloadViewModel.isDownloadComplete.observeAsState(false)
     val movieThumbnails = downloadViewModel.movieThumbnails.observeAsState(emptyList())
     // Create a launcher for the gallery picker
     val launcher = rememberLauncherForActivityResult(
@@ -85,11 +97,37 @@ fun DownloadScreen(
                 content = {
                     items(movieThumbnails.value) { thumbnail ->
                         MovieThumbnailItem(modifier = Modifier.clickable {
-                            downloadViewModel.downloadImage(thumbnail.thumbnailUrl)
+                            downloadViewModel.downloadFile(
+                                thumbnail.thumbnailUrl,
+                                context = context
+                            )
                         }, thumbnail = thumbnail)
                     }
                 }
             )
+        }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(7.dp),
+                progress = animatedProgress / 100f,
+                color = Color.Red
+            )
+            if (isDownloadStarted) {
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(7.dp),
+                    color = Color.Red
+                )
+            }
+            if (isDownloadComplete) {
+                Toast.makeText(context, "Download Completed.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

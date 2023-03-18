@@ -2,19 +2,14 @@ package com.fifty.fiftyflixmovies.presentation.screen.download
 
 import android.app.DownloadManager
 import android.content.Context
-import android.os.Build
 import android.os.Environment
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
 
 class AndroidDownloader(
     private val context: Context
 ) : Downloader {
-    private val downloadManager = context.getSystemService(DownloadManager::class.java)
-
+    override var downloadManager = context.getSystemService(DownloadManager::class.java)
     override fun downloadImage(imageUrl: String): Long {
-        Log.i("Abid", "downloadImage: Hai")
         val fileName = "${System.currentTimeMillis()}.jpg"
         val request = DownloadManager.Request(imageUrl.toUri())
             .setMimeType("image/jpeg")

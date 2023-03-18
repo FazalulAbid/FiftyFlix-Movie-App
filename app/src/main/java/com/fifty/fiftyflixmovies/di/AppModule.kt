@@ -1,5 +1,6 @@
 package com.fifty.fiftyflixmovies.di
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
@@ -199,16 +200,16 @@ object AppModule {
     ): DownloadRepository =
         DownloadRepositoryImpl(thumbnailLocalDataSource, storageReference)
 
-    @Singleton
     @Provides
     fun providesDownloader(@ApplicationContext context: Context): Downloader =
         AndroidDownloader(context)
 
     @Provides
     fun providesDownloadsViewModel(
+        application: Application,
         downloadViewModel: DownloadRepository,
         downloader: Downloader
     ): DownloadViewModel =
-        DownloadViewModel(downloadViewModel, downloader)
+        DownloadViewModel(application, downloadViewModel, downloader)
 
 }
