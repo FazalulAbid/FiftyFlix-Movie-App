@@ -25,7 +25,7 @@ import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.util.Constants
 
 @Composable
-fun MovieBanner(bannerMovie: Movie?) {
+fun MovieBanner(bannerMovie: Movie?, playButtonClick: () -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,7 +85,7 @@ fun MovieBanner(bannerMovie: Movie?) {
                     ) {
                     // Play button.
                     IconButton(
-                        onClick = {},
+                        onClick = playButtonClick,
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_play_solid_round),

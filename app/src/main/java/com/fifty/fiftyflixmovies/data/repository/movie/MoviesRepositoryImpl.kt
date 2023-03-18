@@ -2,6 +2,8 @@ package com.fifty.fiftyflixmovies.data.repository.movie
 
 import com.fifty.fiftyflixmovies.data.model.Movie
 import com.fifty.fiftyflixmovies.data.model.MovieList
+import com.fifty.fiftyflixmovies.data.model.MovieTrailer
+import com.fifty.fiftyflixmovies.data.model.MovieTrailerList
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieCacheDataSource
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieLocalDataSource
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieRemoteDataSource
@@ -46,6 +48,19 @@ class MoviesRepositoryImpl @Inject constructor(
         }
 
         return movieList
+    }
+
+    override suspend fun getMovieTrailerFromApi(movieId: Int): MovieTrailer {
+        lateinit var movieTrailer: MovieTrailer
+        try {
+            val response = movieRemoveDataSource.getMovieTrailer(movieId)
+            val body: MovieTrailerList? = response.body()
+            if (body != null)
+                movieTrailer = body.results.last()
+        } catch (exception: Exception) {
+            Timber.tag(TAG).i("getMovieTrailerFromApi: %s", exception.message)
+        }
+        return movieTrailer
     }
 
     private suspend fun getMoviesFromDB(movieCategoryId: Int): List<Movie> {

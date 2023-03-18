@@ -1,5 +1,8 @@
 package com.fifty.fiftyflixmovies.presentation.screen.home
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -62,6 +65,9 @@ class HomeViewModel @Inject constructor(
     private val _selectedMovie = MutableLiveData<Movie>()
     val selectedMovie: MutableLiveData<Movie> = _selectedMovie
 
+    private val _movieTrailer = MutableLiveData<String>()
+    val movieTrailer: MutableLiveData<String> = _movieTrailer
+
 
     init {
         getMovies()
@@ -89,6 +95,20 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _selectedMovie.value = moviesRepository.getMovie(movieId)
         }
+    }
+
+    fun getMovieTrailer(movieId: Int) {
+        viewModelScope.launch {
+            movieTrailer.value = moviesRepository.getMovieTrailerFromApi(movieId).key
+        }
+    }
+
+    fun playVideo(trailerUrl: String, context: Context) {
+        val intent =
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$trailerUrl"))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.setPackage("com.google.android.youtube")
+        context.startActivity(intent)
     }
 
 }

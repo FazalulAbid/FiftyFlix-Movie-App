@@ -2,6 +2,7 @@ package com.fifty.fiftyflixmovies.data.repository.movie.datasourrceimpl
 
 import com.fifty.fiftyflixmovies.data.api.TMDBService
 import com.fifty.fiftyflixmovies.data.model.MovieList
+import com.fifty.fiftyflixmovies.data.model.MovieTrailerList
 import com.fifty.fiftyflixmovies.data.repository.movie.datasource.MovieRemoteDataSource
 import com.fifty.fiftyflixmovies.util.Constants.NOW_PLAYING_MOVIES_ID
 import com.fifty.fiftyflixmovies.util.Constants.POPULAR_MOVIES_ID
@@ -31,4 +32,8 @@ class MovieRemoteDataSourceImpl(
         }
         return response
     }
+
+    override suspend fun getMovieTrailer(movieId: Int): Response<MovieTrailerList> =
+        tmdbService.getMovieTrailers(movieId, apiKey)
+
 }

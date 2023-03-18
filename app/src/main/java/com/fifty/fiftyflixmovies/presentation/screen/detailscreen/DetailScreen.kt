@@ -1,5 +1,6 @@
 package com.fifty.fiftyflixmovies.presentation.screen.detailscreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material3.Surface
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,6 +24,7 @@ fun DetailScreen(
     movieId: Int?,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     viewModel.getMovie(movieId ?: 0)
     val movie = viewModel.selectedMovie.observeAsState()
 
@@ -30,7 +33,14 @@ fun DetailScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column {
-            MovieBanner(bannerMovie = movie.value)
+            if (movie.value != null) {
+                viewModel.getMovieTrailer(movie.value!!.movieId)
+            }
+            val movieTrailer = viewModel.movieTrailer.observeAsState().value
+            MovieBanner(movie.value) {
+                viewModel.playVideo(movieTrailer ?: "", context)
+                Toast.makeText(context, "Trailer Playing Now", Toast.LENGTH_SHORT).show()
+            }
             Column(modifier = Modifier.padding(16.dp)) {
                 //Movie head.
                 Text(
